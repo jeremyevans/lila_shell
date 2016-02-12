@@ -1,0 +1,86 @@
+<% @title = "User: #{@user.name}, Room: #{@room.name}" %>
+
+<script type="text/javascript">
+$(function() {
+  var l = window.location;
+  var ws_path = ((l.protocol === "https:") ? "wss://" : "ws://") + l.hostname + (((l.port != 80) && (l.port != 443)) ? ":" + l.port : "") + "/join?user_id=<%= @user.id %>&room_id=<%= @room.id %>";
+  var room;
+  var post = $('#post');
+  var posts = $('#posts');
+  var content = $('#content');
+
+  keepAlive = function() {
+    room.send('');
+    setTimeout(keepAlive, 30000);
+  }
+
+  var reconnect = function() {
+    room = new WebSocket(ws_path);
+
+    room.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      if (data.join) {
+        add_line('<' + data.at + '> ' + data.join + ' joined');
+      } else if (data.leave) {
+        add_line('<' + data.at + '> ' + data.leave + ' left');
+      } else {
+        add_line('<' + data.at + '> ' + data.user + ': ' + data.message);
+      }
+    }
+
+    room.onclose = function(e) {
+      add_line("Connection Lost, Reconnecting");
+      setTimeout(reconnect, 2000);
+    }
+
+    room.onerror = function(e) {
+      add_line("Error: "+ e.data);
+    }
+
+    setTimeout(keepAlive, 30000);
+  }
+
+  jumpToPageBottom = function() {
+    content.scrollTop(content.prop("scrollHeight"));
+  }
+
+  var add_line = function(s){
+    var li = $("<li></li>");
+    li.text(s);
+    posts.append(li);
+    jumpToPageBottom();
+  }
+
+  $('#post_form').submit(function(e){
+    room.send(post.val());
+    post.val('');
+    e.preventDefault();
+  });
+
+  resize = function() {
+    $('#content').css('height', window.innerHeight-120);
+  }
+
+  resize();
+  $(window).resize(resize);
+  reconnect();
+  jumpToPageBottom();
+  post.focus();
+});
+</script>
+
+<div class="container" id="content">
+  <ul id="posts">
+    <% @room.recent_messages.reverse_each do |msg| %>
+      <li><%= msg.line %></li>
+    <% end %>
+  </ul>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <form action="#" id="post_form">
+      <input id="post" />
+    <form>
+  </div>
+</footer>

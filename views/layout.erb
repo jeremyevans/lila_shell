@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lila Shell - <%= @title %></title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<style type="text/css">
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  height: 100%;
+}
+nav { top: 0;
+  margin-top: -40px;
+}
+.footer {
+  bottom: 0;
+  background-color: white;
+}
+nav, .footer {
+  position: fixed;
+  width: 100%;
+  height: 40px;
+}
+#content {
+overflow-y: auto;
+}
+
+form {margin: 10px;}
+#post {width: 100%;}
+#posts {list-style-type: none;}
+</style>
+</head>
+
+<body>
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand">Lila Shell - <%= @title %></a>
+    </div>
+  </div>
+</nav>
+
+<%== yield %>
+</body></html>
+
