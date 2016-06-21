@@ -9,7 +9,7 @@
   <%== f.input(:text, :key=>:name, :label=>'Room Name') %>
 <% end %>
 
-<% form({:action=>'/join'}, :button=>'Join Room') do |f| %>
+<% form({:action=>'/room'}, :button=>'Join Room') do |f| %>
   <%== f.input(:select, :key=>:user_id, :options=>User.select_order_map([:name, :id]), :add_blank=>true, :label=>'User') %>
   <%== f.input(:select, :key=>:room_id, :options=>Room.select_order_map([:name, :id]), :add_blank=>true, :label=>'Room') %>
 <% end %>
