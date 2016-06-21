@@ -14,7 +14,6 @@ MessageBus.configure(:backend=>:memory)
 class LilaShell < Roda
   use Rack::CommonLogger
 
-  plugin :static, %w'/index.html'
   plugin :render, :escape=>true
   plugin :forme
   plugin :symbol_views
