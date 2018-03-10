@@ -1,2 +1,2 @@
 require './lila_shell'
-run LilaShell.freeze.app
+run LilaShell::App.freeze.app

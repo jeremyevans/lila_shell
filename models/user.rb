@@ -1,2 +1,4 @@
-class User < Sequel::Model
+module LilaShell
+class User < Model
+end
 end

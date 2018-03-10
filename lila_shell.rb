@@ -1,24 +1,24 @@
 require 'roda'
-require 'tilt/erubis'
-require './models'
+require 'tilt/erubi'
 require 'json'
-
 require 'message_bus'
-#MessageBus.configure(:backend=>:postgres, :backend_options=>{:user=>'message_bus', :dbname=>'message_bus'})
-MessageBus.configure(:backend=>:memory)
 
-#MessageBus.subscribe "/room/1" do |msg|
-#  p [:subscribe, msg]
-#end
+require_relative 'models'
 
-class LilaShell < Roda
+module LilaShell
+class App < Roda
+  include LilaShell
+
   use Rack::CommonLogger
+
+  MESSAGE_BUS = MessageBus::Instance.new
+  MESSAGE_BUS.configure(:backend=>:memory)
 
   plugin :render, :escape=>true
   plugin :forme
   plugin :symbol_views
   plugin :symbol_matchers
-  plugin :message_bus
+  plugin :message_bus, :message_bus=>MESSAGE_BUS
 
   plugin :error_handler do |e|
     puts e.class, e.message, e.backtrace
@@ -40,18 +40,20 @@ class LilaShell < Roda
     end
 
     r.on 'room' do
-      r.get true do
-        r.redirect "/room/#{r[:room_id]}/#{r[:user_id]}"
+      r.is do
+        r.get do
+          r.redirect "/room/#{r[:room_id]}/#{r[:user_id]}"
+        end
+
+        r.post do
+          room = Room.create(:name=>r['name'].to_s)
+          r.redirect '/'
+        end
       end
 
-      r.post true do
-        room = Room.create(:name=>r['name'].to_s)
-        r.redirect '/'
-      end
-
-      r.on ":d/:d" do |room_id, user_id|
-        @user = User.with_pk!(user_id.to_i)
-        @room = Room.with_pk!(room_id.to_i)
+      r.on Integer, Integer do |room_id, user_id|
+        @user = User.with_pk!(user_id)
+        @room = Room.with_pk!(room_id)
         @channel = "/room/#{@room.id}"
         
         next "No access" if @user.name == @room.name
@@ -63,12 +65,12 @@ class LilaShell < Roda
         end
 
         r.post "join" do
-          MessageBus.publish(@channel, {:join=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
+          MESSAGE_BUS.publish(@channel, {:join=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
           ''
         end
 
         r.post "leave" do
-          MessageBus.publish(@channel, {:leave=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
+          MESSAGE_BUS.publish(@channel, {:leave=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
           ''
         end
 
@@ -76,7 +78,7 @@ class LilaShell < Roda
           post = r[:post].to_s.strip
           unless post.empty?
             m = Message.create(:user_id=>@user.id, :room_id=>@room.id, :message=>post)
-            MessageBus.publish(@channel, {:user=>m.user.name, :room_id=>@room.id, :message=>m.message, :at=>m.at.strftime('%H:%M:%S')}.to_json)
+            MESSAGE_BUS.publish(@channel, {:user=>m.user.name, :room_id=>@room.id, :message=>m.message, :at=>m.at.strftime('%H:%M:%S')}.to_json)
           end
           ''
         end
@@ -84,4 +86,4 @@ class LilaShell < Roda
     end
   end
 end
-
+end

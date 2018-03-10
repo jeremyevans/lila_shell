@@ -1,4 +1,3 @@
-
 desc 'Setup the database'
 task :bootstrap do
   sh 'createuser -U postgres lila_shell'

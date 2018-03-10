@@ -1,6 +1,19 @@
-require './db'
+require_relative 'db'
+require 'sequel'
 
-Sequel::Model.plugin :prepared_statements
-Sequel::Model.plugin :auto_validations
+module LilaShell
+  Model = Class.new(Sequel::Model)
+  Model.db = DB
+  Model.def_Model(self)
 
-Dir['./models/*.rb'].each{|f| require(f)}
+  Model.plugin :subclasses
+  Model.plugin :prepared_statements
+  Model.plugin :auto_validations, :not_null=>:presence
+
+  require_relative 'models/message'
+  require_relative 'models/room'
+  require_relative 'models/user'
+
+  Model.freeze_descendents
+  DB.freeze
+end
