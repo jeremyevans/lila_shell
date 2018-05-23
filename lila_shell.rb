@@ -10,12 +10,13 @@ class App < Roda
   include LilaShell
 
   use Rack::CommonLogger
+  use Rack::Session::Cookie, :secret=>SecureRandom.random_bytes(40)
 
   MESSAGE_BUS = MessageBus::Instance.new
   MESSAGE_BUS.configure(:backend=>:memory)
 
   plugin :render, :escape=>true
-  plugin :forme
+  plugin :forme_route_csrf
   plugin :symbol_views
   plugin :symbol_matchers
   plugin :message_bus, :message_bus=>MESSAGE_BUS
@@ -37,7 +38,9 @@ class App < Roda
       File.read 'public/message-bus.js'
     end
 
+
     r.post 'user' do
+      check_csrf!
       user = User.create(:name=>tp.nonempty_str!('name'))
       r.redirect '/'
     end
@@ -49,6 +52,7 @@ class App < Roda
         end
 
         r.post do
+          check_csrf!
           room = Room.create(:name=>tp.nonempty_str!('name'))
           r.redirect '/'
         end
@@ -66,6 +70,8 @@ class App < Roda
         r.get true do
           :room
         end
+
+        check_csrf!
 
         r.post "join" do
           MESSAGE_BUS.publish(@channel, {:join=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
