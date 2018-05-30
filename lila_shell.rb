@@ -10,7 +10,7 @@ class App < Roda
   include LilaShell
 
   use Rack::CommonLogger
-  use Rack::Session::Cookie, :secret=>SecureRandom.random_bytes(40)
+  use Rack::Session::Cookie, :secret=>(ENV.delete('LILA_SHELL_SESSION_SECRET') ||SecureRandom.random_bytes(40))
 
   MESSAGE_BUS = MessageBus::Instance.new
   MESSAGE_BUS.configure(:backend=>:memory)
@@ -21,6 +21,7 @@ class App < Roda
   plugin :symbol_matchers
   plugin :message_bus, :message_bus=>MESSAGE_BUS
   plugin :request_aref, :raise
+  plugin :public
   plugin :typecast_params
   alias tp typecast_params
 
@@ -34,10 +35,7 @@ class App < Roda
       :manage
     end
 
-    r.get 'message-bus.js' do
-      File.read 'public/message-bus.js'
-    end
-
+    r.public
 
     r.post 'user' do
       check_csrf!

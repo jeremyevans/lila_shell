@@ -2,15 +2,15 @@
 
 <div class="container" id="content">
 <% form({:action=>'/user', :method=>'post'}, :button=>'Create User') do |f| %>
-  <%== f.input(:text, :key=>:name, :label=>'User Name') %>
+  <%== f.input(:text, :key=>:name, :label=>'User Name', :required=>true) %>
 <% end %>
 
 <% form({:action=>'/room', :method=>'post'}, :button=>'Create Room') do |f| %>
-  <%== f.input(:text, :key=>:name, :label=>'Room Name') %>
+  <%== f.input(:text, :key=>:name, :label=>'Room Name', :required=>true) %>
 <% end %>
 
 <% form({:action=>'/room'}, :button=>'Join Room') do |f| %>
-  <%== f.input(:select, :key=>:user_id, :options=>User.select_order_map([:name, :id]), :add_blank=>true, :label=>'User') %>
-  <%== f.input(:select, :key=>:room_id, :options=>Room.select_order_map([:name, :id]), :add_blank=>true, :label=>'Room') %>
+  <%== f.input(:select, :key=>:user_id, :options=>User.select_order_map([:name, :id]), :add_blank=>true, :label=>'User', :required=>true) %>
+  <%== f.input(:select, :key=>:room_id, :options=>Room.select_order_map([:name, :id]), :add_blank=>true, :label=>'Room', :required=>true) %>
 <% end %>
 </div>

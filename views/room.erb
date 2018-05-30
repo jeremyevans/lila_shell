@@ -1,70 +1,5 @@
 <% @title = "User: #{@user.name}, Room: #{@room.name}" %>
 
-<script type="text/javascript" src="/message-bus.js"></script>
-<script type="text/javascript">
-$(function() {
-  var room;
-  var post = $('#post');
-  var posts = $('#posts');
-  var content = $('#content');
-
-  resize = function() {
-    $('#content').css('height', window.innerHeight-120);
-  }
-
-  jumpToPageBottom = function() {
-    content.scrollTop(content.prop("scrollHeight"));
-  }
-
-  var add_line = function(s){
-    var li = $("<li></li>");
-    li.text(s);
-    posts.append(li);
-    jumpToPageBottom();
-  }
-
-  resize();
-  $(window).resize(resize);
-  jumpToPageBottom();
-  post.focus();
-
-  MessageBus.baseUrl = "<%= request.path_info %>/";
-  MessageBus.start();
-  MessageBus.subscribe("<%= @channel %>", function(data){
-    data = JSON.parse(data);
-    if (data.join) {
-      add_line('<' + data.at + '> ' + data.join + ' joined');
-    } else if (data.leave) {
-      add_line('<' + data.at + '> ' + data.leave + ' left');
-    } else {
-      add_line('<' + data.at + '> ' + data.user + ': ' + data.message);
-    }
-  });
-
-  csrfs = $('#csrfs');
-  csrf_field = csrfs.data('field');
-
-  join_data = {};
-  join_data[csrf_field] = csrfs.data('join');
-  $.post("/room/<%= @room.id %>/<%= @user.id %>/join", join_data);
-
-  leave_data = {};
-  leave_data[csrf_field] = csrfs.data('leave');
-  window.onbeforeunload = function(){
-    $.post("/room/<%= @room.id %>/<%= @user.id %>/leave", leave_data);
-  };
-
-  $('#post_form').submit(function(e){
-    post_data = {"post": post.val()};
-    post_data[csrf_field] = csrfs.data('message');
-    $.post("/room/<%= @room.id %>/<%= @user.id %>/message", post_data);
-    post.val('');
-    e.preventDefault();
-  });
-
-});
-</script>
-
 <div class="container" id="content">
   <ul id="posts">
     <% @room.recent_messages.reverse_each do |msg| %>
@@ -75,15 +10,21 @@ $(function() {
 
 <footer class="footer">
   <div class="container">
-    <form action="#" id="post_form">
-      <input type="hidden" id="csrfs"
+    <form action="#" id="post_form"
         <% csrf_base = "/room/#{@room.id}/#{@user.id}/" %>
+        data-base-url="<%= request.path_info %>/"
+        data-channel="<%= @channel %>"
         data-field="<%= csrf_field %>"
         data-join="<%= csrf_token(csrf_base + 'join') %>"
         data-leave="<%= csrf_token(csrf_base + 'leave') %>"
         data-message="<%= csrf_token(csrf_base + 'message') %>"
       >
-      <input id="post" />
+      <input type="text" id="post" />
+      <input type="submit" id="post_submit" value="Post"/>
     <form>
   </div>
 </footer>
+
+<script type="text/javascript" src="/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/message-bus.js"></script>
+<script type="text/javascript" src="/room.js"></script>
