@@ -30,6 +30,16 @@ class App < Roda
     view :content=>'<p>Oops, an error occurred</p>'
   end
 
+  plugin :content_security_policy do |csp|
+    csp.default_src :none
+    csp.style_src :self
+    csp.form_action :self
+    csp.script_src :self
+    csp.connect_src :self
+    csp.base_uri :none
+    csp.frame_ancestors :none
+  end
+
   route do |r|
     r.root do
       :manage
