@@ -39,6 +39,13 @@ Capybara.configure do |config|
   config.match = :prefer_exact
 end
 
+begin
+  require 'refrigerator'
+rescue LoadError
+else
+  Refrigerator.freeze_core
+end
+
 describe 'LilaShell' do
   include Capybara::DSL
 
