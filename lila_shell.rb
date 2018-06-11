@@ -7,6 +7,8 @@ require_relative 'models'
 
 module LilaShell
 class App < Roda
+  opts[:root] = File.dirname(__FILE__)
+
   include LilaShell
 
   use Rack::CommonLogger
