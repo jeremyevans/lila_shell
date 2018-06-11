@@ -3,6 +3,10 @@
 Lila Shell is a simple chat app that serves as an example of using
 roda-message_bus.
 
+## Demo
+
+A demo site is available at http://lilashell-demo.jeremyevans.net
+
 ## Setup
 
 The server is written in Ruby, so the first step is installing Ruby.
