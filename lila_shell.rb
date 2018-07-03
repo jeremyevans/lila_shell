@@ -12,7 +12,10 @@ class App < Roda
   include LilaShell
 
   use Rack::CommonLogger
-  use Rack::Session::Cookie, :secret=>(ENV.delete('LILA_SHELL_SESSION_SECRET') ||SecureRandom.random_bytes(40))
+  plugin :sessions,
+    :cipher_secret=>ENV.delete('LILA_SHELL_SESSION_CIPHER_SECRET'),
+    :hmac_secret=>ENV.delete('LILA_SHELL_SESSION_HMAC_SECRET'),
+    :key=>'lila_shell.session'
 
   MESSAGE_BUS = MessageBus::Instance.new
   MESSAGE_BUS.configure(:backend=>:memory)
