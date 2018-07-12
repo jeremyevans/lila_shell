@@ -13,8 +13,7 @@ class App < Roda
 
   use Rack::CommonLogger
   plugin :sessions,
-    :cipher_secret=>ENV.delete('LILA_SHELL_SESSION_CIPHER_SECRET'),
-    :hmac_secret=>ENV.delete('LILA_SHELL_SESSION_HMAC_SECRET'),
+    :secret=>ENV.delete('LILA_SHELL_SESSION_SECRET'),
     :key=>'lila_shell.session'
 
   MESSAGE_BUS = MessageBus::Instance.new

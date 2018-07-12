@@ -24,15 +24,13 @@ rake task to do that (be sure to read it first to see what it does):
 You need to set the following enviroment variables:
 
 LILA_SHELL\_DATABASE\_URL :: PostgreSQL database connection URL
-LILA_SHELL_SESSION_CIPHER_SECRET :: session cipher secret, 32 bytes
-LILA_SHELL_SESSION_HMAC_SECRET :: session HMAC secret, >=32 bytes
+LILA_SHELL_SESSION_ECRET :: session secret, >=64 bytes
 
 One way to set this is to create a .env.rb file in the root of the repository
 containing:
 
     ENV['LILA_SHELL_DATABASE_URL'] ||= 'postgres:///?user=lila_shell&password=...'
-    ENV['LILA_SHELL_SESSION_CIPHER_SECRET'] ||= '...'
-    ENV['LILA_SHELL_SESSION_HMAC_SECRET'] ||= '...'
+    ENV['LILA_SHELL_SESSION_SECRET'] ||= '...'
 
 You can then run the server (via unicorn or another rack-compatible webserver):
 

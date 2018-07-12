@@ -18,7 +18,7 @@ task :web_test  do
   ENV['RACK_ENV'] = 'test'
   ENV['PORT'] ||= '3001'
   ENV['LILA_SHELL_DATABASE_URL'] ||= "postgres:///lila_shell_test?user=lila_shell"
-  ENV['LILA_SHELL_SESSION_SECRET'] ||= SecureRandom.base64(40)
+  ENV['LILA_SHELL_SESSION_SECRET'] ||= SecureRandom.base64(48)
 
   sh "psql -U lila_shell -f test/clean.sql lila_shell_test"
   Process.spawn("#{ENV['UNICORN']||'unicorn'} -E test -p #{ENV['PORT']} -D -c test/unicorn.conf")
