@@ -1,5 +1,4 @@
-require 'minitest/spec'
-require 'minitest/autorun'
+require_relative 'minitest_helper'
 
 ENV['RACK_ENV'] = 'test'
 require_relative '../models'

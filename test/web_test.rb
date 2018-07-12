@@ -1,11 +1,6 @@
 require 'capybara'
 require 'capybara/dsl'
-
-Gem.suffix_pattern
-
-ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
-require 'minitest/hooks/default'
-require 'minitest/autorun'
+require_relative 'minitest_helper'
 
 case ENV['CAPYBARA_DRIVER']
 when 'chrome'
