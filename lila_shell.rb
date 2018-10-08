@@ -11,7 +11,6 @@ class App < Roda
 
   include LilaShell
 
-  use Rack::CommonLogger
   plugin :sessions,
     :secret=>ENV.delete('LILA_SHELL_SESSION_SECRET'),
     :key=>'lila_shell.session'
@@ -26,6 +25,7 @@ class App < Roda
   plugin :message_bus, :message_bus=>MESSAGE_BUS
   plugin :request_aref, :raise
   plugin :public
+  plugin :common_logger
   plugin :typecast_params
   alias tp typecast_params
 
