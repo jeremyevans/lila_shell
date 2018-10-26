@@ -31,6 +31,6 @@ task :web_test  do
 end
 
 default_specs = %w'model_test'
-default_specs << 'web_test' if RUBY_VERSION > '2.3'
+default_specs << 'web_test' if RUBY_VERSION > '2.4'
 desc 'Run all specs'
 task :default=>default_specs
