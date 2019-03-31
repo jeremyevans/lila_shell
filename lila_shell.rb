@@ -8,6 +8,8 @@ require_relative 'models'
 module LilaShell
 class App < Roda
   opts[:root] = File.dirname(__FILE__)
+  opts[:check_dynamic_arity] = false
+  opts[:check_arity] = :warn
 
   include LilaShell
 
@@ -18,6 +20,7 @@ class App < Roda
   MESSAGE_BUS = MessageBus::Instance.new
   MESSAGE_BUS.configure(:backend=>:memory)
 
+  plugin :direct_call
   plugin :render, :escape=>true
   plugin :forme_route_csrf
   plugin :symbol_views
