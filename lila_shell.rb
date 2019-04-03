@@ -21,6 +21,7 @@ class App < Roda
   MESSAGE_BUS.configure(:backend=>:memory)
 
   plugin :direct_call
+  plugin :hash_routes
   plugin :render, :escape=>true
   plugin :forme_route_csrf
   plugin :symbol_views
@@ -47,20 +48,16 @@ class App < Roda
     csp.frame_ancestors :none
   end
 
-  route do |r|
-    r.root do
-      :manage
-    end
+  hash_routes :root do
+    view '', 'manage'
 
-    r.public
-
-    r.post 'user' do
+    post 'user' do
       check_csrf!
       user = User.create(:name=>tp.nonempty_str!('name'))
-      r.redirect '/'
+      request.redirect '/'
     end
 
-    r.on 'room' do
+    on 'room' do |r|
       r.is do
         r.get do
           r.redirect "/room/#{tp.pos_int!('room_id')}/#{tp.pos_int!('user_id')}"
@@ -86,28 +83,38 @@ class App < Roda
           :room
         end
 
-        check_csrf!
-
-        r.post "join" do
-          MESSAGE_BUS.publish(@channel, {:join=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
-          ''
-        end
-
-        r.post "leave" do
-          MESSAGE_BUS.publish(@channel, {:leave=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
-          ''
-        end
-
-        r.post "message" do
-          post = tp.str!('post').strip
-          unless post.empty?
-            m = Message.create(:user_id=>@user.id, :room_id=>@room.id, :message=>post)
-            MESSAGE_BUS.publish(@channel, {:user=>m.user.name, :room_id=>@room.id, :message=>m.message, :at=>m.at.strftime('%H:%M:%S')}.to_json)
-          end
-          ''
+        r.post do
+          check_csrf!
+          r.hash_routes(:room_post)
         end
       end
     end
+  end
+
+  hash_routes :room_post do
+    is "join" do |_|
+      MESSAGE_BUS.publish(@channel, {:join=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
+      ''
+    end
+
+    is "leave" do |_|
+      MESSAGE_BUS.publish(@channel, {:leave=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
+      ''
+    end
+
+    is "message" do |_|
+      post = tp.str!('post').strip
+      unless post.empty?
+        m = Message.create(:user_id=>@user.id, :room_id=>@room.id, :message=>post)
+        MESSAGE_BUS.publish(@channel, {:user=>m.user.name, :room_id=>@room.id, :message=>m.message, :at=>m.at.strftime('%H:%M:%S')}.to_json)
+      end
+      ''
+    end
+  end
+
+  route do |r|
+    r.hash_routes(:root)
+    r.public
   end
 end
 end
