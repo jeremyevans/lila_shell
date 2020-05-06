@@ -2,6 +2,7 @@ require 'roda'
 require 'tilt/erubi'
 require 'json'
 require 'message_bus'
+require 'strscan' # Needed for Rack::Multipart::Parser
 
 require_relative 'models'
 
