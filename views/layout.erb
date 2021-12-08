@@ -6,18 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lila Shell - <%= @title %></title>
-<link rel="stylesheet" href="/bootstrap-3.3.7.customized.min.css" />
 <link rel="stylesheet" href="/app.css" />
 </head>
 
 <body>
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand">Lila Shell - <%= @title %></a>
-    </div>
-  </div>
-</nav>
+<h1 href="/" class="navbar-brand">Lila Shell - <%= @title %></h1>
 
 <%== yield %>
 </body>
