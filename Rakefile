@@ -16,7 +16,7 @@ desc 'Run web tests'
 task :web_test  do
   require 'securerandom'
   ENV['RACK_ENV'] = 'test'
-  ENV['PORT'] ||= '3001'
+  ENV['PORT'] ||= '3002'
   ENV['LILA_SHELL_DATABASE_URL'] ||= "postgres:///lila_shell_test?user=lila_shell"
   ENV['LILA_SHELL_SESSION_SECRET'] ||= SecureRandom.base64(48)
 
@@ -31,6 +31,6 @@ task :web_test  do
 end
 
 default_specs = %w'model_test'
-default_specs << 'web_test' if RUBY_VERSION > '2.5'
+default_specs << 'web_test' if RUBY_VERSION > '2.7' && !ENV['NO_AJAX']
 desc 'Run all specs'
 task :default=>default_specs

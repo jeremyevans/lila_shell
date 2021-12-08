@@ -58,7 +58,7 @@ describe 'LilaShell' do
   end
 
   it "should work as expected" do
-    visit('http://127.0.0.1:3001/')
+    visit("http://127.0.0.1:#{ENV['PORT']}/")
     page.title.must_equal 'Lila Shell - Manage'
 
     fill_in 'User Name', :with=>'Foo'
