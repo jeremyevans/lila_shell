@@ -19,12 +19,12 @@
         data-leave="<%= csrf_token(csrf_base + 'leave') %>"
         data-message="<%= csrf_token(csrf_base + 'message') %>"
       >
-      <input type="text" id="post" />
+      <input type="text" id="post" autocomplete="off" />
       <input type="submit" id="post_submit" value="Post"/>
     <form>
   </div>
 </footer>
 
-<script type="text/javascript" src="/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="/message-bus.js"></script>
+<script type="text/javascript" src="/message-bus-ajax.js"></script>
 <script type="text/javascript" src="/room.js"></script>
