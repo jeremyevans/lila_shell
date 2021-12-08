@@ -72,15 +72,14 @@ describe 'LilaShell' do
     click_button 'Join Room'
 
     page.title.must_equal 'Lila Shell - User: Foo, Room: Bar'
-    sleep 0.5
     page.find('#post').set('Test Post')
     click_button 'Post'
-    sleep 0.5
+    visit page.current_url
     page.find('#posts').text.must_include 'Foo: Test Post'
 
     page.find('#post').set('Another Post')
     click_button 'Post'
-    sleep 0.5
+    visit page.current_url
     page.find('#posts').text.must_include 'Foo: Another Post'
   end
 end
