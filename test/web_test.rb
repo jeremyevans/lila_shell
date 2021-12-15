@@ -1,6 +1,5 @@
 require 'capybara'
 require 'capybara/dsl'
-require_relative 'warnings_helper'
 require_relative 'minitest_helper'
 
 case ENV['CAPYBARA_DRIVER']

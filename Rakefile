@@ -7,9 +7,11 @@ task :bootstrap do
   sh 'sequel -E -m migrate postgres:///lila_shell_test?user=lila_shell'
 end
 
+test_flags = "-w" if RUBY_VERSION >= '3'
+
 desc 'Run model tests'
 task :model_test do
-  sh "#{FileUtils::RUBY} test/model_test.rb"
+  sh "#{FileUtils::RUBY} #{test_flags} test/model_test.rb"
 end
 
 desc 'Run web tests'
@@ -24,7 +26,7 @@ task :web_test  do
   Process.spawn("#{ENV['UNICORN']||'unicorn'} -E test -p #{ENV['PORT']} -D -c test/unicorn.conf")
   begin
     sleep 1
-    sh "#{FileUtils::RUBY} test/web_test.rb"
+    sh "#{FileUtils::RUBY} #{test_flags} test/web_test.rb"
   ensure 
     Process.kill(:SIGTERM, File.read('test/unicorn.pid').to_i)
   end
