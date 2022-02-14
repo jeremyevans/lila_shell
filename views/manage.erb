@@ -2,11 +2,11 @@
 
 <div class="container" id="content">
 <% form({:action=>'/user', :method=>'post'}, :button=>'Create User') do |f| %>
-  <%== f.input(:text, :key=>:name, :label=>'User Name', :required=>true) %>
+  <%== f.input(:text, :id=>:user_name, :key=>:name, :label=>'User Name', :required=>true) %>
 <% end %>
 
 <% form({:action=>'/room', :method=>'post'}, :button=>'Create Room') do |f| %>
-  <%== f.input(:text, :key=>:name, :label=>'Room Name', :required=>true) %>
+  <%== f.input(:text, :id=>:room_name, :key=>:name, :label=>'Room Name', :required=>true) %>
 <% end %>
 
 <% form({:action=>'/room'}, :button=>'Join Room') do |f| %>

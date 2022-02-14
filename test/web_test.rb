@@ -32,9 +32,7 @@ else
 end
 Capybara.default_selector = :css
 Capybara.server_port = ENV['PORT'].to_i
-Capybara.configure do |config|
-  config.match = :prefer_exact
-end
+Capybara.exact = true
 
 begin
   require 'refrigerator'

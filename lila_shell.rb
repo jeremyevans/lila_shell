@@ -34,6 +34,9 @@ class App < Roda
   plugin :typecast_params
   alias tp typecast_params
 
+  Forme.register_config(:mine, :base=>:default, :labeler=>:explicit, :wrapper=>:div)
+  Forme.default_config = :mine
+
   plugin :error_handler do |e|
     puts e.class, e.message, e.backtrace
     view :content=>'<p>Oops, an error occurred</p>'
