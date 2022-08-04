@@ -22,7 +22,7 @@ class App < Roda
   MESSAGE_BUS.configure(:backend=>:memory)
 
   plugin :direct_call
-  plugin :render, :escape=>true
+  plugin :render, :escape=>true, :template_opts=>{:chain_appends=>true}
   plugin :forme_route_csrf
   plugin :symbol_views
   plugin :message_bus, :message_bus=>MESSAGE_BUS
