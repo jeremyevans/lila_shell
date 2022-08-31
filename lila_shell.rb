@@ -29,6 +29,7 @@ class App < Roda
   plugin :request_aref, :raise
   plugin :public
   plugin :common_logger
+  plugin :disallow_file_uploads
   plugin :typecast_params
   alias tp typecast_params
 
