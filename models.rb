@@ -7,7 +7,6 @@ module LilaShell
   Model.def_Model(self)
 
   Model.plugin :subclasses
-  Model.plugin :prepared_statements
   Model.plugin :auto_validations, :not_null=>:presence
 
   require_relative 'models/message'
