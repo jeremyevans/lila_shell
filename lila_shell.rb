@@ -30,7 +30,8 @@ class App < Roda
   plugin :public
   plugin :common_logger
   plugin :disallow_file_uploads
-  plugin :typecast_params
+  plugin :typecast_params_sized_integers, :sizes=>[64], :default_size=>64
+  plugin :Integer_matcher_max
   alias tp typecast_params
 
   Forme.register_config(:mine, :base=>:default, :labeler=>:explicit, :wrapper=>:div)
