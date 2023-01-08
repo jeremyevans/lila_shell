@@ -23,7 +23,7 @@ task :web_test  do
   ENV['LILA_SHELL_SESSION_SECRET'] ||= SecureRandom.base64(48)
 
   sh "psql -U lila_shell -f test/clean.sql lila_shell_test"
-  Process.spawn("#{ENV['UNICORN']||'unicorn'} -E test -p #{ENV['PORT']} -D -c test/unicorn.conf")
+  Process.spawn("#{ENV['UNICORN']||'unicorn'} -E test -o 127.0.0.1 -p #{ENV['PORT']} -D -c test/unicorn.conf")
   begin
     sleep 1
     sh "#{FileUtils::RUBY} #{test_flags} test/web_test.rb"
