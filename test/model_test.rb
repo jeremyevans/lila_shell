@@ -5,6 +5,8 @@ require_relative '../models'
 
 include LilaShell
 raise "test database must end with test" unless DB.get{current_database.function}.end_with?('test')
+Model.freeze_descendents
+DB.freeze
 
 describe Message do
   it "#line should return the line to display in the chat room" do

@@ -12,7 +12,4 @@ module LilaShell
   require_relative 'models/message'
   require_relative 'models/room'
   require_relative 'models/user'
-
-  Model.freeze_descendents
-  DB.freeze
 end
