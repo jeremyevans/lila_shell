@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 require 'roda'
-require 'tilt/erubi'
 require 'json'
 require 'message_bus'
 require 'strscan' # Needed for Rack::Multipart::Parser
+
+require 'tilt'
+require 'tilt/erubi'
 
 require_relative 'models'
 
@@ -29,7 +31,7 @@ class App < Roda
   MESSAGE_BUS.configure(:backend=>:memory)
 
   plugin :direct_call
-  plugin :render, :escape=>true, :template_opts=>{:chain_appends=>true}
+  plugin :render, :escape=>true, :template_opts=>{:chain_appends=>true, :freeze=>true, :skip_compiled_encoding_detection=>true}
   plugin :forme_route_csrf
   plugin :symbol_views
   plugin :message_bus, :message_bus=>MESSAGE_BUS

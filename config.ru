@@ -1,5 +1,6 @@
 require './lila_shell'
 run LilaShell::App.freeze.app
+Tilt.finalize!
 
 if ENV['RACK_ENV'] != 'development'
   begin

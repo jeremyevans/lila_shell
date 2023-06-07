@@ -7,7 +7,7 @@ gem "sequel_pg", ">= 1.7"
 gem "roda", ">= 3.62"
 gem "roda-message_bus", ">= 1.0"
 gem "erubi", ">= 1.11"
-gem "tilt", '>= 2.0.6'
+gem "tilt", '>= 2.2'
 
 group :development, :test do
   gem "capybara", '>= 1.1.2'
