@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "pg", ">= 0.18"
 gem "forme", ">= 1.8"
 gem "sequel", ">= 5.62"
-gem "sequel_pg", ">= 1.7"
+gem "sequel_pg", ">= 1.7", require: nil
 gem "roda", ">= 3.62"
 gem "roda-message_bus", ">= 1.0"
 gem "erubi", ">= 1.11"
