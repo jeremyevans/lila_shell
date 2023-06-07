@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module LilaShell
 class Message < Model
   many_to_one :user

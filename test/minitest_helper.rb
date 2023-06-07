@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Gem.suffix_pattern
 
 ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins

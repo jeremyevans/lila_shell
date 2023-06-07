@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'minitest_helper'
 
 ENV['RACK_ENV'] = 'test'
