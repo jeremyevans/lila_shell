@@ -9,6 +9,13 @@ raise "test database must end with test" unless DB.get{current_database.function
 Model.freeze_descendents
 DB.freeze
 
+begin
+  require 'refrigerator'
+rescue LoadError
+else
+  Refrigerator.freeze_core
+end
+
 describe Message do
   it "#line should return the line to display in the chat room" do
     m = Message.new(:user=>User.load(:id=>1, :name=>'foo'), :message=>'bar', :at=>Time.local(2018, 10, 11, 13, 14, 15))
