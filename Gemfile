@@ -8,6 +8,7 @@ gem "roda", ">= 3.62"
 gem "roda-message_bus", ">= 1.0"
 gem "erubi", ">= 1.11"
 gem "tilt", '>= 2.2'
+gem "logger"
 
 group :development, :test do
   gem "capybara", '>= 1.1.2'
