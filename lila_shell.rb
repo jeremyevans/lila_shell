@@ -37,11 +37,17 @@ class App < Roda
   plugin :message_bus, :message_bus=>MESSAGE_BUS
   plugin :request_aref, :raise
   plugin :public
-  plugin :common_logger
   plugin :disallow_file_uploads
   plugin :typecast_params_sized_integers, :sizes=>[64], :default_size=>64
   plugin :Integer_matcher_max
   alias tp typecast_params
+
+  logger = if ENV['RACK_ENV'] == "test"
+    Class.new{def write(_) end}.new
+  else
+    $stderr
+  end
+  plugin :common_logger, logger
 
   Forme.register_config(:mine, :base=>:default, :labeler=>:explicit, :wrapper=>:div)
   Forme.default_config = :mine
@@ -70,7 +76,7 @@ class App < Roda
 
     r.post 'user' do
       check_csrf!
-      user = User.create(:name=>tp.nonempty_str!('name'))
+      User.create(:name=>tp.nonempty_str!('name'))
       request.redirect '/'
     end
 
@@ -82,7 +88,7 @@ class App < Roda
 
         r.post do
           check_csrf!
-          room = Room.create(:name=>tp.nonempty_str!('name'))
+          Room.create(:name=>tp.nonempty_str!('name'))
           r.redirect '/'
         end
       end
