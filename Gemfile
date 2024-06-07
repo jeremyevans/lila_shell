@@ -9,6 +9,7 @@ gem "roda-message_bus", ">= 1.0"
 gem "erubi", ">= 1.11"
 gem "tilt", '>= 2.2'
 gem "logger"
+gem "puma"
 
 group :development, :test do
   gem "capybara", '>= 1.1.2'
