@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require_relative 'models'
+
 require 'roda'
 require 'json'
 require 'message_bus'
@@ -6,8 +8,6 @@ require 'strscan' # Needed for Rack::Multipart::Parser
 
 require 'tilt'
 require 'tilt/erubi'
-
-require_relative 'models'
 
 module LilaShell
 class App < Roda
