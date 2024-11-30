@@ -67,6 +67,13 @@ class App < Roda
     csp.frame_ancestors :none
   end
 
+  plugin :class_matchers
+  [User, Room].each do |klass|
+    class_matcher klass, Integer do |id|
+      klass[id]
+    end
+  end
+
   route do |r|
     r.public
 
@@ -93,37 +100,33 @@ class App < Roda
         end
       end
 
-      r.on Integer, Integer do |room_id, user_id|
-        @user = User.with_pk!(user_id)
-        @room = Room.with_pk!(room_id)
-        @channel = "/room/#{@room.id}"
+      r.on Room, User do |room, user|
+        channel = "/room/#{room.id}"
         
-        next "No access" if @user.name == @room.name
+        next "No access" if user.name == room.name
 
-        r.message_bus(@channel)
+        r.message_bus(channel)
 
         r.get true do
+          @user = user
+          @room = room
+          @channel = channel
           :room
         end
 
         r.post do
           check_csrf!
 
-          r.is "join" do
-            MESSAGE_BUS.publish(@channel, {:join=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
-            ''
-          end
-
-          r.is "leave" do 
-            MESSAGE_BUS.publish(@channel, {:leave=>@user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
+          r.is %w"join leave" do |type|
+            MESSAGE_BUS.publish(channel, {type.to_sym=>user.name, :at=>Time.now.strftime('%H:%M:%S')}.to_json)
             ''
           end
 
           r.is "message" do
             post = tp.str!('post').strip
             unless post.empty?
-              m = Message.create(:user_id=>@user.id, :room_id=>@room.id, :message=>post)
-              MESSAGE_BUS.publish(@channel, {:user=>m.user.name, :room_id=>@room.id, :message=>m.message, :at=>m.at.strftime('%H:%M:%S')}.to_json)
+              m = Message.create(:user_id=>user.id, :room_id=>room.id, :message=>post)
+              MESSAGE_BUS.publish(channel, {:user=>user.name, :room_id=>room.id, :message=>post, :at=>m.at.strftime('%H:%M:%S')}.to_json)
             end
             ''
           end
